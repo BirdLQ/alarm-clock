@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
 
+#########################################################
+#                                                       #
+#                                                       #
+#     created by BirdLQ: https://github.com/BirdLQ      #
+#                                                       #   
+#                                                       #
+#########################################################
+
+
 import sys, webbrowser, time, winsound, os
 
 from tkinter import *

@@ -121,7 +121,7 @@ def main():
   
     global state, display
     
-    display = Label(window, textvariable="", font=('calibri', 52, 'bold'), 
+    display = Label(window, textvariable="", font=('calibri', 78, 'bold'), 
                 background = '#1b2836', 
                 foreground = '#fafafa')
     display.config(text="00:00:00")
@@ -134,13 +134,13 @@ def main():
         
         if state == True:
             if hours == 0 and mins == 0 and secs == 0:
-                display.config(text="Done!",font = ('calibri', 52, 'bold'))
+                display.config(text="DONE!",font = ('calibri', 92, 'bold'))
                 state = False
-                if str(link.get()) == "www.exemple.com":
+                if link_open == "www.exemple.com" or link_open == "":
                     mixer.music.load("music")
                     mixer.music.play()
                 else:
-                    webbrowser.open(str(link.get()))
+                    webbrowser.open(link_open)
             else:
                 display.config(text="%02d:%02d:%02d" % (hours, mins, secs))
                 
@@ -158,7 +158,7 @@ def main():
                 window.after(1000, countdown)
                 
     def start():
-        global state, hours, mins, secs, btn_state
+        global state, hours, mins, secs, link_open
         
         if state == False:
             state = True
@@ -184,6 +184,7 @@ def main():
                 lbl1.destroy()
                 lbl2.destroy()
                 lbl3.destroy()
+                link_open = str(link.get())
                 link.destroy()
                 hourEntry.destroy()
                 minuteEntry.destroy()
@@ -218,60 +219,57 @@ def main():
     minuteEntry.insert(0,"00")
     minuteEntry.place(relx=0.48, rely=0.55, anchor=W)
     
-    def supp(event):
-        if str(link.get())=="":
-            link.insert(0,"www.exemple.com")
+    def supp_hour(event):       
         try:
             if int(hourEntry.get())<=1:
                 event.widget.delete(0,"end")
         except:
             hourEntry.insert(0,"00")
+            
+    def supp_min(event):       
         try:  
             if int(minuteEntry.get())<=1:
                 event.widget.delete(0,"end")
         except:
-            minuteEntry.insert(0,"00") 
+            minuteEntry.insert(0,"00")
+            
+    def supp_link(event):                 
         if str(link.get()) == "www.exemple.com":
             event.widget.delete(0,"end")
+        if str(link.get())=="":
+            link.insert(0,"www.exemple.com")
+        
         return None
 
-    hourEntry.bind("<Button-1>",supp)
-    minuteEntry.bind("<Button-1>",supp)
-    link.bind("<Button-1>",supp)
+    hourEntry.bind("<Button-1>",supp_hour)
+    minuteEntry.bind("<Button-1>",supp_min)
+    link.bind("<Button-1>",supp_link)
     
     lbl1.place(relx=0.4, rely=0.45, anchor=CENTER) 
     lbl2.place(relx=0.4, rely=0.55, anchor=CENTER) 
     lbl3.place(relx=0.4, rely=0.65, anchor=CENTER) 
-    
-    def switch_button():
-        global btn_state, win_btn, off_btn
-        btn_state=1
-
-        def test(event):
-            global btn_state
-            if btn_state == 1:
-                #win_btn.config(image=mid_btn)
-                #window.after(100,None)
-                win_btn.config(image=on_btn)
-                start()
-                btn_state=0
-            else:
-                #win_btn.config(image=mid_btn)
-                #window.after(100,None)
-                win_btn.config(image=off_btn)
-                main()
-                btn_state=1
-
-        on_btn=PhotoImage(file='on.png')
-        #mid_btn=PhotoImage(file='mid.png')
-        off_btn=PhotoImage(file='off.png')
-
-        win_btn = Label(window, image=off_btn, cursor="hand2")
-        win_btn.place(relx=0.5, rely=0.85, anchor=CENTER)
-        win_btn.config(bg='#1b2836')
-        win_btn.bind("<Button-1>",test)
-
         
+    def switch_button():
+        def test(event):
+            btn_state = win_btn['image']
+            win_btn.config(image=mid_btn)
+            if btn_state=='ON':
+                display.destroy()
+                main()
+            else:
+                start()             
+            window.after(38, win_btn.config, {'image': off_btn if btn_state == 'ON' else on_btn}) 
+
+        on_btn = PhotoImage(file='on.png', name='ON')
+        mid_btn = PhotoImage(file='mid.png')
+        off_btn = PhotoImage(file='off.png', name='OFF')
+
+        win_btn = Label(window, image=off_btn)
+        win_btn.place(relx=0.5, rely=0.85, anchor=CENTER)
+        win_btn.config(bg='#1b2836', cursor='hand2')
+        win_btn.bind("<Button-1>", test)
+        #win_btn.pack()
+            
     switch_button()
 
 

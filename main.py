@@ -55,7 +55,7 @@ class simpleAnimation:
         return tuple(int(a + (b - a) * t) for a, b in zip(color_a, color_b))
 
     def Application(self, *args, **kwargs):
-        self.labelIntro = Label(window, text="CREATED BY\nEL HAMIDI OTHMANE", font=('calibri', 36, 'bold'),
+        self.labelIntro = Label(window, text="CREATED BY\nBIRD LQ", font=('calibri', 36, 'bold'),
                             background = '#1b2836')
         self.labelIntro.place(relx=0.515, rely=0.45, anchor=CENTER)
         
